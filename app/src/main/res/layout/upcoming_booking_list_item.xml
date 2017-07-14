@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_text_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="21dp"
+    android:layout_centerVertical="true"
+    android:layout_alignParentStart="true">
+
+
+
+        <ImageView
+            android:id="@+id/upcoming_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/room_image" />
+
+        <TextView
+            android:id="@+id/upcoming_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/upcoming_img"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000000"
+            tools:text="Date" />
+
+
+        <TextView
+            android:id="@+id/upcoming_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/upcoming_date"
+            android:layout_toRightOf="@+id/upcoming_img"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000000"
+            tools:text="Time"
+            />
+
+        <TextView
+            android:id="@+id/upcoming_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/upcoming_time"
+            android:layout_toRightOf="@+id/upcoming_img"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000000"
+            tools:text="Room"
+            />
+    </RelativeLayout>

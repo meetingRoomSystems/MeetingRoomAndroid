@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Meeting Room Booking</string>
+    <string name="prompt_user">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register">Register</string>
+    <string name="error_invalid_user">This username is unavailable</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect">The username or/and password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="title_activity_home_page_user">Home Page</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_register">Register</string>
+    <string name="full_name">Full name</string>
+    <string name="upcoming_bookings">Upcoming Bookings</string>
+    <string name="title_activity_rooms">Rooms</string>
+    <string name="room1_room"><b>Room:</b> Meeting Room 1</string>
+    <string name="room2_room"><b>Room:</b> Meeting Room 2</string>
+    <string name="room3_room"><b>Room:</b> Meeting Room 3</string>
+    <string name="room4_room"><b>Room:</b> Meeting Room 4</string>
+    <string name="room1_capacity"><b>Capacity:</b> 10</string>
+    <string name="room2_capacity"><b>Capacity:</b> 15</string>
+    <string name="room3_capacity"><b>Capacity:</b> 5</string>
+    <string name="room4_capacity"><b>Capacity:</b> 20</string>
+    <string name="room4_features"><b>Features:</b>\nWhite board, Projector, Speaker, TV</string>
+    <string name="room3_features"><b>Features:</b>\nWhite board, Projector</string>
+    <string name="room2_features"><b>Features:</b>\nWhite board, Projector, Speaker, TV</string>
+    <string name="room1_features"><b>Features:</b>\nWhite board, Projector, Speaker</string>
+    <string name="url">https://compulynxmeetingrooms.000webhostapp.com/</string>
+    <string name="available_timings"><b>Available Timings:</b>\nSelect timing to make booking</string>
+    <string name="title_activity_confirmation">Confirmation</string>
+    <string name="title_activity_delete_booking">Delete Booking</string>
+    <string name="title_activity_calender_view">CalenderView</string>
+    <string name="title_activity_new_bookings">New Bookings</string>
+    <string name="room_image">Room image</string>
+    <string name="pick_date">Pick a date</string>
+    <string name="no_bookings">No Bookings</string>
+    <string name="room">Room: </string>
+    <string name="time">Time: </string>
+    <string name="date">Date: </string>
+    <string name="by">By: </string>
+    <string-array name="duration_arrays">
+        <item>30 mins</item>
+        <item>60 mins</item>
+        <item>90 mins</item>
+    </string-array>
+
+</resources>
