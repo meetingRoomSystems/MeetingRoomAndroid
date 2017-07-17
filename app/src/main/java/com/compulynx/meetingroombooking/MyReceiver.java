@@ -19,6 +19,7 @@ public class MyReceiver extends BroadcastReceiver {
         int capacity = intent.getExtras().getInt("capacity");
         String message = fullname + " you have meeting in an hour at meeting room " + room + " with " + capacity + " people.";
 
+//        create a notification object
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)

@@ -303,24 +303,29 @@ public class NewBookings extends AppCompatActivity
     public static class PlaceholderFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static ListView mListView;
+//        ArrayLists to store the the bookings
         private static ArrayList<String> room1 = new ArrayList<>();
         private static ArrayList<String> room2 = new ArrayList<>();
         private static ArrayList<String> room3 = new ArrayList<>();
         private static ArrayList<String> room4 = new ArrayList<>();
+//      boolean to check if the bookings has been received from database so that it can be displayed
         private static boolean checkRoom1;
         private static boolean checkRoom2;
         private static boolean checkRoom3;
         private static boolean firstRoom3;
         private static boolean checkRoom4;
         private static boolean firstRoom4;
+//        boolean to check if date is from today onwards. If true then date from today onwards
         private static boolean checkDate1;
         private static boolean checkDate2;
         private static boolean checkDate3;
         private static boolean checkDate4;
+//        listView for each rooms which will show the available timings for each room
         private static ListView mListView1;
         private static ListView mListView2;
         private static ListView mListView3;
         private static ListView mListView4;
+//        adapter for the list view (link the ArrayList to the listviews)
         private static ArrayAdapter adapter1;
         private static ArrayAdapter adapter2;
         private static ArrayAdapter adapter3;
@@ -560,7 +565,7 @@ public class NewBookings extends AppCompatActivity
         }
         @Override
         protected void onPostExecute(String result) {
-
+//            checkDate = checks if the date is from today onwards
             boolean checkDate = true;
             final ArrayList<String> time = new ArrayList<>();
 

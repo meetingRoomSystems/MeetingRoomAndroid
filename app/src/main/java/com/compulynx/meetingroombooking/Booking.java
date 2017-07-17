@@ -21,6 +21,7 @@ class Booking {
     String bookingTimeEnd;
     JSONArray allBookings;
 
+    //return a ArrayList of all bookings from a JSON data
     static ArrayList<Booking> getBookings(String jsonData){
         final ArrayList<Booking> bookingList = new ArrayList<>();
 

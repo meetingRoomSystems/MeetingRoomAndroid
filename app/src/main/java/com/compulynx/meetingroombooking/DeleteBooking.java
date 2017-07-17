@@ -48,8 +48,9 @@ public class DeleteBooking extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
         mList = findViewById(R.id.delete_list);
 
-        GetUpcomingBooking getUpcomingBooking = new GetUpcomingBooking();
-        getUpcomingBooking.execute((Void) null);
+//        run the url call is another thread
+        DeleteBookings deleteBookings = new DeleteBookings();
+        deleteBookings.execute((Void) null);
         showProgress(true);
     }
 
@@ -91,7 +92,8 @@ public class DeleteBooking extends AppCompatActivity {
 
     }
 
-    private class GetUpcomingBooking extends AsyncTask<Void, Void, String> {
+//    this class calls a url which deletes a bookings
+    private class DeleteBookings extends AsyncTask<Void, Void, String> {
 
         private HttpURLConnection urlConnection = null;
 

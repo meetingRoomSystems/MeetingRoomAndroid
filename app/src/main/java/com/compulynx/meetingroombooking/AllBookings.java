@@ -106,12 +106,14 @@ public class AllBookings extends AppCompatActivity
         mCompactCalendarView.setShouldDrawDaysHeader(true);
 
         mCompactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+//            get bookings all bookings for the day selected on the calender
             @Override
             public void onDayClick(Date dateClicked) {
                 setSubtitle(dateFormat.format(dateClicked));
                 year = Integer.parseInt(yearFormat.format(dateClicked));
                 month = Integer.parseInt(monthFormat.format(dateClicked));
                 day = Integer.parseInt(dayFormat.format(dateClicked));
+               // run the url call is another thread
                 GetAllBooking mAuthTask = new GetAllBooking(year,month,day);
                 mAuthTask.execute((Void) null);
                 showProgress(true);
@@ -267,6 +269,7 @@ public class AllBookings extends AppCompatActivity
 
     }
 
+//    this class calls a url which gets All the bookings for a selected date and shows that booking in a ListView
     private class GetAllBooking extends AsyncTask<Void, Void, String> {
 
         private HttpURLConnection urlConnection = null;

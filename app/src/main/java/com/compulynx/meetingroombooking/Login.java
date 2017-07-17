@@ -187,6 +187,7 @@ public class Login extends AppCompatActivity{
      * Represents an asynchronous login task used to authenticate
      * the user.
      */
+    //    this class calls a url which gets checks if the username and password are correct and logs the user in
     private class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mUser;

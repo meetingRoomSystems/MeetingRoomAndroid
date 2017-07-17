@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 
 
 /**
- * This class is used for enabling the scrolling behaviour for the calenders found in AllBookings and NewBookings
+ * This class is used for enabling the scrolling behaviour for the calenders used in AllBookings and NewBookings
  */
 
 class ScrollingCalendarBehavior extends AppBarLayout.Behavior {

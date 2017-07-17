@@ -131,6 +131,7 @@ public class Confirmation extends AppCompatActivity {
             else if(String.valueOf(spinner.getSelectedItem()).equals("90 mins")){
                 duration = "90";
             }
+//          run the url call is another thread
             ConfirmBooking confirmBooking = new ConfirmBooking(fullname,username,date,time,room,results_capacity.getText().toString(),displayDate,duration);
             confirmBooking.execute((Void) null);
         }
@@ -141,6 +142,7 @@ public class Confirmation extends AppCompatActivity {
         onBackPressed();
     }
 
+//    this class calls a url which makes a booking for the user with the infromation from this activity and NewBookings
     private class ConfirmBooking extends AsyncTask<Void, Void, String> {
 
         private final String mFullName;

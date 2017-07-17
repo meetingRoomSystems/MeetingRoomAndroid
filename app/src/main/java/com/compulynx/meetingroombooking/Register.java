@@ -170,6 +170,7 @@ public class Register extends AppCompatActivity {
      * Represents an asynchronous registration task used to authenticate
      * the user.
      */
+    //    this class calls a url which creates a new user 
     private class UserRegisterTask extends AsyncTask<Void, Void, String> {
 
         private final String mUser;

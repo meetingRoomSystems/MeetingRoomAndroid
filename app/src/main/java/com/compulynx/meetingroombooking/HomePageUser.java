@@ -84,6 +84,7 @@ public class HomePageUser extends AppCompatActivity
         TextView user = (TextView) header.findViewById(R.id.homepage_user);
         name.setText(fullname);
         user.setText(username);
+        // run the url call is another thread
         CreateReminders createReminders = new CreateReminders();
         createReminders.execute((Void) null);
         GetUpcomingBooking mAuthTask = new GetUpcomingBooking();
@@ -192,7 +193,7 @@ public class HomePageUser extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+//    this class calls a url which gets All the upcoming bookings for a user and shows those booking in a ListView
     private class GetUpcomingBooking extends AsyncTask<Void, Void, String> {
 
         private HttpURLConnection urlConnection = null;
@@ -306,7 +307,7 @@ public class HomePageUser extends AppCompatActivity
 
 
     }
-
+//    this class calls a url which creates reminders for bookings made in the application or on the website
     private class CreateReminders extends AsyncTask<Void, Void, String> {
 
         private HttpURLConnection urlConnection = null;
