@@ -348,16 +348,17 @@ public class HomePageUser extends AppCompatActivity
                     e.printStackTrace();
                 }
                 int succ = 0;
-                JSONArray booking = new JSONArray();
                 try {
                     succ = jobject.getInt("success");
-                    booking = jobject.getJSONArray("bookings");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(succ == 1 && booking.length() != 0) {
+                if(succ == 1) {
+                    System.out.println(result);
                     final ArrayList<Booking> bookings = Booking.getBookings(result);
-                    for(Booking book: bookings){
+                    System.out.println(bookings.size());
+                    for(int i = 0; i < bookings.size(); i++){
+                        Booking book = bookings.get(i);
                         String[] dates = book.bookingDate.split("-");
                         String[] times = book.bookingTime.split(":");
                         int y = Integer.parseInt(dates[0]);
@@ -366,7 +367,7 @@ public class HomePageUser extends AppCompatActivity
                         int h = Integer.parseInt(times[0]);
                         int mm = Integer.parseInt(times[1]);
                         String uniqueCode = "" + m + d + h + mm + book.room;
-
+                        System.out.println(uniqueCode);
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(Calendar.MONTH, m-1);
                         calendar.set(Calendar.YEAR, y);
@@ -384,15 +385,14 @@ public class HomePageUser extends AppCompatActivity
                         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
                         if(book.reminder == 0){
+                            System.out.println("notification made");
                             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
                         }
                         else{
+                            System.out.println("notification canceled");
                             pendingIntent.cancel();
                             alarmManager.cancel(pendingIntent);
-
                         }
-
-
                     }
 
                 }

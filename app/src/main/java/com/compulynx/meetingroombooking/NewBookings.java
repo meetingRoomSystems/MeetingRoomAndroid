@@ -1,6 +1,7 @@
 package com.compulynx.meetingroombooking;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.logging.StreamHandler;
 
 /**
  * This activity shows available timings for each room on a particular day selected by the user
@@ -75,6 +77,7 @@ public class NewBookings extends AppCompatActivity
     GestureDetector gestureScanner;
     ImageView arrow;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,8 @@ public class NewBookings extends AppCompatActivity
 
         fullname = getIntent().getStringExtra("fullname");
         username = getIntent().getStringExtra("username");
+        PlaceholderFragment.fname = fullname;
+        PlaceholderFragment.uname = username;
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -131,16 +136,33 @@ public class NewBookings extends AppCompatActivity
                 PlaceholderFragment.checkRoom2 = false;
                 PlaceholderFragment.checkRoom3 = false;
                 PlaceholderFragment.checkRoom4 = false;
-                ArrayList<String> gettingInfo = new ArrayList<>();
-                gettingInfo.add("Getting information...");
-                PlaceholderFragment.room1 = gettingInfo;
-                PlaceholderFragment.room2 = gettingInfo;
-                PlaceholderFragment.room3 = gettingInfo;
-                PlaceholderFragment.room4 = gettingInfo;
                 DecimalFormat mFormat= new DecimalFormat("00");
                 mFormat.setRoundingMode(RoundingMode.DOWN);
+                ArrayList<String> data = new ArrayList<String>();
+                data.add("Getting available timings...");
                 PlaceholderFragment.dateDisplay =  mFormat.format(Double.valueOf(day)) + "/" +  mFormat.format(Double.valueOf(month)) + "/" +  mFormat.format(Double.valueOf(year));
                 PlaceholderFragment.date =  mFormat.format(Double.valueOf(year)) + "-" +  mFormat.format(Double.valueOf(month)) + "-" +  mFormat.format(Double.valueOf(day));
+
+//                remove the list with the timings and show the message "Getting available timings" for all tabs
+                PlaceholderFragment.adapter1 = new ArrayAdapter<>(getApplicationContext(),R.layout.new_booking_item_list,R.id.new_booking_list_text, data);
+                try {
+                    PlaceholderFragment.mListView1.setAdapter(PlaceholderFragment.adapter1);
+                    PlaceholderFragment.mListView1.setOnItemClickListener(null);
+                    PlaceholderFragment.mListView2.setAdapter(PlaceholderFragment.adapter1);
+                    PlaceholderFragment.mListView2.setOnItemClickListener(null);
+                }
+                catch (Exception ignored){}
+                try {
+                    PlaceholderFragment.mListView3.setAdapter(PlaceholderFragment.adapter1);
+                    PlaceholderFragment.mListView3.setOnItemClickListener(null);
+                }
+                catch (Exception ignored){}
+                try {
+                    PlaceholderFragment.mListView4.setAdapter(PlaceholderFragment.adapter1);
+                    PlaceholderFragment.mListView4.setOnItemClickListener(null);
+                }
+                catch (Exception ignored){}
+
                 GetAvailableTimings task = new GetAvailableTimings(PlaceholderFragment.date,1, PlaceholderFragment.dateDisplay);
                 task.execute();
                 GetAvailableTimings task2 = new GetAvailableTimings(PlaceholderFragment.date,2, PlaceholderFragment.dateDisplay);
@@ -192,12 +214,6 @@ public class NewBookings extends AppCompatActivity
         PlaceholderFragment.checkRoom2 = false;
         PlaceholderFragment.checkRoom3 = false;
         PlaceholderFragment.checkRoom4 = false;
-        ArrayList<String> gettingInfo = new ArrayList<>();
-        gettingInfo.add("Getting information...");
-        PlaceholderFragment.room1 = gettingInfo;
-        PlaceholderFragment.room2 = gettingInfo;
-        PlaceholderFragment.room3 = gettingInfo;
-        PlaceholderFragment.room4 = gettingInfo;
         DecimalFormat mFormat= new DecimalFormat("00");
         mFormat.setRoundingMode(RoundingMode.DOWN);
         PlaceholderFragment.dateDisplay =  mFormat.format(Double.valueOf(day)) + "/" +  mFormat.format(Double.valueOf(month)) + "/" +  mFormat.format(Double.valueOf(year));
@@ -314,6 +330,7 @@ public class NewBookings extends AppCompatActivity
         private static boolean checkRoom3;
         private static boolean firstRoom3;
         private static boolean checkRoom4;
+//        firstRoom is to check if its the first time we open the Room 4 tab
         private static boolean firstRoom4;
 //        boolean to check if date is from today onwards. If true then date from today onwards
         private static boolean checkDate1;
@@ -330,14 +347,16 @@ public class NewBookings extends AppCompatActivity
         private static ArrayAdapter adapter2;
         private static ArrayAdapter adapter3;
         private static ArrayAdapter adapter4;
-        private static String fullname;
-        private static String username;
         private static String date;
         private static String dateDisplay;
+        private static String fname;
+        private static String uname;
 
         public PlaceholderFragment() {
 
         }
+
+
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -353,11 +372,9 @@ public class NewBookings extends AppCompatActivity
             View rootView = inflater.inflate(R.layout.fragment_new_booking, container, false);
 
             TextView room = rootView.findViewById(R.id.section_label);
-            TextView capacity =   rootView.findViewById(R.id.capacity);
-            TextView features =   rootView.findViewById(R.id.features);
+            TextView capacity = rootView.findViewById(R.id.capacity);
+            TextView features = rootView.findViewById(R.id.features);
             mListView =  rootView.findViewById(R.id.list);
-
-
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 0){
                 room.setText(R.string.room1_room);
                 capacity.setText(R.string.room1_capacity);
@@ -372,8 +389,8 @@ public class NewBookings extends AppCompatActivity
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String timeOfBooking = PlaceholderFragment.room1.get(position);
                                 Intent i = new Intent(getContext(), Confirmation.class);
-                                i.putExtra("fullname", fullname);
-                                i.putExtra("username", username);
+                                i.putExtra("fullname", fname);
+                                i.putExtra("username", uname);
                                 i.putExtra("date", date);
                                 i.putExtra("time", timeOfBooking);
                                 i.putExtra("room", "1");
@@ -406,8 +423,8 @@ public class NewBookings extends AppCompatActivity
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String timeOfBooking = PlaceholderFragment.room2.get(position);
                                 Intent i = new Intent(getContext(), Confirmation.class);
-                                i.putExtra("fullname", fullname);
-                                i.putExtra("username", username);
+                                i.putExtra("fullname", fname);
+                                i.putExtra("username", uname);
                                 i.putExtra("date", date);
                                 i.putExtra("time", timeOfBooking);
                                 i.putExtra("room", "2");
@@ -436,8 +453,8 @@ public class NewBookings extends AppCompatActivity
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String timeOfBooking = PlaceholderFragment.room3.get(position);
                                 Intent i = new Intent(getContext(), Confirmation.class);
-                                i.putExtra("fullname", fullname);
-                                i.putExtra("username", username);
+                                i.putExtra("fullname", fname);
+                                i.putExtra("username", uname);
                                 i.putExtra("date", date);
                                 i.putExtra("time", timeOfBooking);
                                 i.putExtra("room", "3");
@@ -467,8 +484,8 @@ public class NewBookings extends AppCompatActivity
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String timeOfBooking = PlaceholderFragment.room4.get(position);
                                 Intent i = new Intent(getContext(), Confirmation.class);
-                                i.putExtra("fullname", fullname);
-                                i.putExtra("username", username);
+                                i.putExtra("fullname", fname);
+                                i.putExtra("username", uname);
                                 i.putExtra("date", date);
                                 i.putExtra("time", timeOfBooking);
                                 i.putExtra("room", "4");
@@ -538,6 +555,7 @@ public class NewBookings extends AppCompatActivity
             mDisplayDate = displayDate;
 
         }
+
 
         @Override
         protected String doInBackground(Void... params) {
@@ -634,7 +652,6 @@ public class NewBookings extends AppCompatActivity
                         time.add(t);
                     }
                 }
-
                 if (mRoom == 1) {
                     PlaceholderFragment.room1 = time;
                     PlaceholderFragment.checkRoom1 = true;
@@ -737,10 +754,10 @@ public class NewBookings extends AppCompatActivity
                         PlaceholderFragment.checkRoom4 = true;
                         PlaceholderFragment.checkDate4 = true;
                     } else {
-                        PlaceholderFragment.firstRoom4 = true;
                         try {
+                            PlaceholderFragment.checkRoom4 = true;
                             PlaceholderFragment.adapter4 = new ArrayAdapter<>(getApplicationContext(),R.layout.new_booking_item_list,R.id.new_booking_list_text, PlaceholderFragment.room4);
-                            PlaceholderFragment.mListView4.setAdapter(PlaceholderFragment.adapter4);//
+                            PlaceholderFragment.mListView4.setAdapter(PlaceholderFragment.adapter4);
                             if(checkDate) {
                                 PlaceholderFragment.checkRoom4 = true;
                                 PlaceholderFragment.mListView4.setOnItemClickListener(new AdapterView.OnItemClickListener() {

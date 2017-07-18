@@ -34,7 +34,11 @@ class Booking {
             for(int i = 0; i < bookings.length(); i++){
                 Booking book = new Booking();
 
-                book.fullname = bookings.getJSONObject(i).getString("fullname");
+                try {
+                    book.fullname = bookings.getJSONObject(i).getString("fullname");
+                }
+                catch (Exception ignored){}
+
                 try {
                     book.username = bookings.getJSONObject(i).getString("username");
                 }
@@ -43,13 +47,23 @@ class Booking {
                 book.room = bookings.getJSONObject(i).getInt("room");
                 book.bookingDate = bookings.getJSONObject(i).getString("booking_date");
                 book.bookingTime = bookings.getJSONObject(i).getString("booking_start");
-                book.bookingTimeEnd = bookings.getJSONObject(i).getString("booking_end");
-                book.duration = bookings.getJSONObject(i).getInt("duration");
-                book.allBookings = bookings.getJSONObject(i).getJSONArray("all_bookings");
+                try {
+                    book.bookingTimeEnd = bookings.getJSONObject(i).getString("booking_end");
+                }
+                catch (Exception ignored){}
+                try {
+                    book.duration = bookings.getJSONObject(i).getInt("duration");
+                }
+                catch (Exception ignored){}
+                try {
+                    book.allBookings = bookings.getJSONObject(i).getJSONArray("all_bookings");
+                }
+                catch (Exception ignored){}
                 try {
                     book.reminder = bookings.getJSONObject(i).getInt("reminder");
                 }
                 catch (Exception ignored){}
+
                 bookingList.add(book);
             }
         }catch (JSONException e) {

@@ -41,9 +41,9 @@
     <string name="date">Date: </string>
     <string name="by">By: </string>
     <string-array name="duration_arrays">
-        <item>30 mins</item>
-        <item>60 mins</item>
-        <item>90 mins</item>
+        <item>30</item>
+        <item>60</item>
+        <item>90</item>
     </string-array>
 
 </resources>

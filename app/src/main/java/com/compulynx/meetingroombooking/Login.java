@@ -233,7 +233,6 @@ public class Login extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String result) {
-
             CoordinatorLayout mCoordinatorLayout;
             mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.login_form);
             mAuthTask = null;

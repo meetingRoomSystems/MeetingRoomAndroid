@@ -1,5 +1,7 @@
 package com.compulynx.meetingroombooking;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -18,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import org.json.JSONException;
@@ -42,9 +45,13 @@ public class Confirmation extends AppCompatActivity {
     private String time;
     private String displayDate;
     private String room;
+    private ImageButton button;
     private EditText results_capacity;
     private Spinner spinner;
     private int maxCapacity = 0;
+
+    private View mProgressView;
+    private View mConfirmationFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,9 @@ public class Confirmation extends AppCompatActivity {
         room = this.getIntent().getExtras().getString("room");
         displayDate = this.getIntent().getExtras().getString("displayDate");
 
+        mConfirmationFormView = findViewById(R.id.confirm_form);
+        mProgressView = findViewById(R.id.confirm_progress);
+
         TextView results_date = (TextView) findViewById(R.id.resultsView_date);
         TextView results_name = (TextView) findViewById(R.id.resultsView_By);
         TextView results_time = (TextView) findViewById(R.id.resultsView_time);
@@ -68,6 +78,9 @@ public class Confirmation extends AppCompatActivity {
         results_capacity = (EditText) findViewById(R.id.resultsView_capacity);
         TextView textView_room = (TextView) findViewById(R.id.textView_capacity);
         spinner = (Spinner) findViewById(R.id.spinner);
+
+        button = (ImageButton) findViewById(R.id.submit);
+        button.setClickable(true);
 
 
         if(room.equals("1")){
@@ -111,8 +124,31 @@ public class Confirmation extends AppCompatActivity {
         return true;
     }
 
+    private void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+//
+        mConfirmationFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mConfirmationFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mConfirmationFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
 
     public void submit(@SuppressWarnings("UnusedParameters") View view){
+
         if(TextUtils.isEmpty(results_capacity.getText().toString())){
             results_capacity.setError(getString(R.string.error_field_required));
             results_capacity.requestFocus();
@@ -122,15 +158,20 @@ public class Confirmation extends AppCompatActivity {
         }
         else{
             String duration = new String();
-            if(String.valueOf(spinner.getSelectedItem()).equals("30 mins")){
+            if(spinner.getSelectedItem().toString().equals("30")){
                 duration = "30";
             }
-            else if(String.valueOf(spinner.getSelectedItem()).equals("30 mins")){
+            else if(spinner.getSelectedItem().toString().equals("60")){
                 duration = "60";
             }
-            else if(String.valueOf(spinner.getSelectedItem()).equals("90 mins")){
+            else if(spinner.getSelectedItem().toString().equals("90")){
                 duration = "90";
             }
+            else{
+                duration = "30";
+            }
+            button.setClickable(false);
+            showProgress(true);
 //          run the url call is another thread
             ConfirmBooking confirmBooking = new ConfirmBooking(fullname,username,date,time,room,results_capacity.getText().toString(),displayDate,duration);
             confirmBooking.execute((Void) null);
@@ -228,7 +269,7 @@ public class Confirmation extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (success == 1) {
-//
+                    showProgress(false);
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Confirmation.this);
                     alertDialogBuilder.setTitle("Booking Made");
                     alertDialogBuilder.setMessage("Dear " + mFullName + ", meeting room " + mRoom + " has been booked for " + mDisplayDate + " at " + mTime + " for " + mDuration + " mins with " + mCapacity + " people.");
@@ -251,6 +292,7 @@ public class Confirmation extends AppCompatActivity {
                 } else {
                     Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Booking cannot be made as no free slot for " + mDuration + " mins" , Snackbar.LENGTH_LONG);
                     snackbar.show();
+                    showProgress(false);
                 }
             }
         }
