@@ -189,6 +189,7 @@ public class Register extends AppCompatActivity {
             StringBuilder result = new StringBuilder();
             if(isNetworkAvailable()) {
                 try {
+                    WordUtils.capitalize(mName);
                     mName.replace(" ","%20");
                     String link = getString(R.string.url) + "register.php?fullname=" + mName + "&username=" + mUser + "&user_password=" + mPassword;
                     URL url = new URL(link);

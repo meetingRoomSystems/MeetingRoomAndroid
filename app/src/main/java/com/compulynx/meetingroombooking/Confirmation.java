@@ -2,9 +2,7 @@ package com.compulynx.meetingroombooking;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -31,13 +30,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * This activity contains information about the booking the user is about to make.
  */
 
-public class Confirmation extends AppCompatActivity {
+public class Confirmation extends AppCompatActivity implements MultiSpinner.MultiSpinnerListener {
 
     private String fullname;
     private String username;
@@ -49,7 +52,9 @@ public class Confirmation extends AppCompatActivity {
     private EditText results_capacity;
     private Spinner spinner;
     private int maxCapacity = 0;
-
+    MultiSpinner multiSpinner;
+    List<String> items;
+    Map<String, String> users;
     private View mProgressView;
     private View mConfirmationFormView;
 
@@ -67,17 +72,20 @@ public class Confirmation extends AppCompatActivity {
         time = this.getIntent().getExtras().getString("time");
         room = this.getIntent().getExtras().getString("room");
         displayDate = this.getIntent().getExtras().getString("displayDate");
+        GetAllUsers getAllUsers = new GetAllUsers();
+        getAllUsers.execute((Void) null);
 
         mConfirmationFormView = findViewById(R.id.confirm_form);
         mProgressView = findViewById(R.id.confirm_progress);
 
         TextView results_date = (TextView) findViewById(R.id.resultsView_date);
-        TextView results_name = (TextView) findViewById(R.id.resultsView_By);
         TextView results_time = (TextView) findViewById(R.id.resultsView_time);
         TextView results_room = (TextView) findViewById(R.id.resultsView_room);
         results_capacity = (EditText) findViewById(R.id.resultsView_capacity);
         TextView textView_room = (TextView) findViewById(R.id.textView_capacity);
         spinner = (Spinner) findViewById(R.id.spinner);
+
+
 
         button = (ImageButton) findViewById(R.id.submit);
         button.setClickable(true);
@@ -102,9 +110,10 @@ public class Confirmation extends AppCompatActivity {
         }
 
         results_date.setText(displayDate);
-        results_name.setText(fullname);
         results_time.setText(time);
         results_room.setText(room);
+
+
 
 
     }
@@ -183,7 +192,12 @@ public class Confirmation extends AppCompatActivity {
         onBackPressed();
     }
 
-//    this class calls a url which makes a booking for the user with the infromation from this activity and NewBookings
+    @Override
+    public void onItemsSelected(boolean[] selected) {
+
+    }
+
+    //    this class calls a url which makes a booking for the user with the infromation from this activity and NewBookings
     private class ConfirmBooking extends AsyncTask<Void, Void, String> {
 
         private final String mFullName;
@@ -195,6 +209,9 @@ public class Confirmation extends AppCompatActivity {
         private final String mCapacity;
         private final String mDuration;
         private HttpURLConnection urlConnection;
+        boolean[] selected;
+        ArrayList<String> tagsFullname;
+        ArrayList<String> tagsUsername;
 
 
         ConfirmBooking(String fullname, String username,String date,String time,String room,String capacity,String displayDate,String duration) {
@@ -210,11 +227,40 @@ public class Confirmation extends AppCompatActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            selected = multiSpinner.getSelected();
+            tagsFullname = new ArrayList<>();
+            tagsUsername = new ArrayList<>();
+            for(int i=0;i<selected.length;i++){
+                if(selected[i]){
+                    tagsFullname.add(items.get(i));
+                    System.out.println(items.get(i));
+                }
+            }
+            if(tagsFullname.size() > 0) {
+                for (int i = 0; i < tagsFullname.size(); i++) {
+                    tagsUsername.add(users.get(tagsFullname.get(i)));
+                }
+            }
+        }
+
+        @Override
         protected String doInBackground(Void... params) {
             StringBuilder result = new StringBuilder();
+
             if(isNetworkAvailable()) {
                 try {
-                    String link = getString(R.string.url) +  "setbooking.php?username="+mUserName+"&capacity="+mCapacity+"&room="+mRoom+"&booking_date="+mDate+"&booking_time="+mTime+"&length="+mDuration;
+                    String link = "";
+                    if(tagsFullname.size()>0){
+                         link += getString(R.string.url) + "setbooking.php?username=" + mUserName + "&capacity=" + mCapacity + "&room=" + mRoom + "&booking_date=" + mDate + "&booking_time=" + mTime + "&length=" + mDuration;
+                        for(String tag : tagsUsername){
+                            link += "&tags[]=" + tag;
+                        }
+                    }
+                    else {
+                        link = getString(R.string.url) + "setbooking.php?username=" + mUserName + "&capacity=" + mCapacity + "&room=" + mRoom + "&booking_date=" + mDate + "&booking_time=" + mTime + "&length=" + mDuration + "&tags[]=none";
+                    }
                     System.out.println(link);
                     URL url = new URL(link);
                     urlConnection = (HttpURLConnection) url.openConnection();
@@ -226,7 +272,7 @@ public class Confirmation extends AppCompatActivity {
                     while ((line = reader.readLine()) != null) {
                         result.append(line);
                     }
-
+                    result.append("");
 
                 } catch (Exception e) {
                     return "";
@@ -245,12 +291,14 @@ public class Confirmation extends AppCompatActivity {
         protected void onPostExecute(String result) {
             CoordinatorLayout mCoordinatorLayout;
             mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.confirmation);
-
+            showProgress(false);
+            button.setClickable(true);
             if (result.equals("ni") ){
                 Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Connect to the internet", Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
             else if(result.equals("")){
+                System.out.println("Unexpected error");
                 Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Unexpected error occurred", Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
@@ -269,7 +317,6 @@ public class Confirmation extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (success == 1) {
-                    showProgress(false);
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Confirmation.this);
                     alertDialogBuilder.setTitle("Booking Made");
                     alertDialogBuilder.setMessage("Dear " + mFullName + ", meeting room " + mRoom + " has been booked for " + mDisplayDate + " at " + mTime + " for " + mDuration + " mins with " + mCapacity + " people.");
@@ -301,6 +348,97 @@ public class Confirmation extends AppCompatActivity {
         protected void onCancelled() {
         }
     }
+
+    private class GetAllUsers extends AsyncTask<Void,Void,String> implements MultiSpinner.MultiSpinnerListener {
+
+        private HttpURLConnection urlConnection;
+
+        protected String doInBackground(Void... params) {
+            StringBuilder result = new StringBuilder();
+            if(isNetworkAvailable()) {
+                try {
+                    String link = getString(R.string.url) +  "getAllUsers.php?username="+username;
+                    System.out.println(link);
+                    URL url = new URL(link);
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    result.append("");
+
+
+                } catch (Exception e) {
+                    return "";
+                } finally {
+                    urlConnection.disconnect();
+                }
+                return result.toString();
+            }
+            else{
+                return "ni";
+            }
+
+
+        }
+
+        protected void onPostExecute(String result) {
+            JSONObject jobject = null;
+            try {
+                jobject = new JSONObject(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            int success = 0;
+            try {
+                assert jobject != null;
+                success = jobject.getInt("success");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JSONArray names = new JSONArray();
+            try {
+                names = jobject.getJSONArray("names");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (success == 1) {
+                multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
+                users = new HashMap<String, String>();
+                items = new ArrayList<>();
+                for(int i = 0; i < names.length(); i++) {
+                    String fname;
+                    String uname;
+                    try {
+                        fname= names.getJSONObject(i).getString("fullname");
+                        uname= names.getJSONObject(i).getString("username");
+                    } catch (JSONException e) {
+                        fname = "";
+                        uname = "";
+                    }
+                    items.add(fname);
+                    users.put(fname,uname);
+                }
+                multiSpinner.setItems(items, "No one selected", this);
+            } else {
+                multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
+                ArrayList<String> noItems = new ArrayList<>();
+                noItems.add("No users");
+                multiSpinner.setItems(noItems, "No one selected", this);
+
+            }
+        }
+
+        @Override
+        public void onItemsSelected(boolean[] selected) {
+
+        }
+    }
+
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

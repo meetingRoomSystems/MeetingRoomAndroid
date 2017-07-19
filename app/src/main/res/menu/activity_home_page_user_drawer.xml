@@ -14,11 +14,11 @@
             android:id="@+id/nav_delete_booking"
             android:icon="@drawable/ic_delete"
             android:tint="#000"
-            android:title="Delete my Bookings" />
+            android:title="Delete My Bookings" />
         <item
             android:id="@+id/nav_all_booking"
             android:icon="@drawable/ic_today"
-            android:title="All Bookings" />
+            android:title="View All Bookings" />
         <item
             android:id="@+id/nav_room"
             android:icon="@drawable/ic_room"

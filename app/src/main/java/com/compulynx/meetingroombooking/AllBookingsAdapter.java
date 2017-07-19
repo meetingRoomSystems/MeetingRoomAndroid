@@ -52,7 +52,13 @@ class AllBookingsAdapter extends BaseAdapter{
         Booking booking = (Booking) getItem(i);
         name.setText("By: " + booking.fullname);
         time.setText("Time: " + booking.bookingTime + "-" + booking.bookingTimeEnd);
-        capacity.setText("Capacity: " + booking.capacity);
+        if(booking.others.equals("")){
+            capacity.setText("Meeting is with " + booking.capacity + " people");
+        }
+        else{
+            capacity.setText("Meeting is with " + booking.capacity + " people, which include " + booking.others);
+        }
+
         room.setText("Room:" + " " + booking.room);
         if(booking.room == 1){
             img.setImageResource(R.drawable.room1);

@@ -19,6 +19,7 @@ class Booking {
     String bookingDate;
     String bookingTime;
     String bookingTimeEnd;
+    String others;
     JSONArray allBookings;
 
     //return a ArrayList of all bookings from a JSON data
@@ -61,6 +62,10 @@ class Booking {
                 catch (Exception ignored){}
                 try {
                     book.reminder = bookings.getJSONObject(i).getInt("reminder");
+                }
+                catch (Exception ignored){}
+                try {
+                    book.others = bookings.getJSONObject(i).getString("others");
                 }
                 catch (Exception ignored){}
 

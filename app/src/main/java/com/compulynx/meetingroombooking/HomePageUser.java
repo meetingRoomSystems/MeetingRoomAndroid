@@ -269,7 +269,12 @@ public class HomePageUser extends AppCompatActivity
                             Booking book = bookings.get(position);
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomePageUser.this);
                             alertDialogBuilder.setTitle("Booking Details");
-                            alertDialogBuilder.setMessage("This booking is on " + book.bookingDate + " from " + book.bookingTime + " to " + book.bookingTimeEnd + ". The meeting is in room " + book.room + " and is with " + book.capacity + " people" );
+                            if(book.others.equals("")){
+                                alertDialogBuilder.setMessage("This booking is on " + book.bookingDate + " from " + book.bookingTime + " to " + book.bookingTimeEnd + ". The meeting is in room " + book.room + " and is with " + book.capacity + " people" );
+                            }
+                            else{
+                                alertDialogBuilder.setMessage("This booking is on " + book.bookingDate + " from " + book.bookingTime + " to " + book.bookingTimeEnd + ". The meeting is in room " + book.room + " and is with " + book.capacity + " people which include " + book.others );
+                            }
                             alertDialogBuilder.setPositiveButton("Done",
                                     new DialogInterface.OnClickListener() {
                                         @Override

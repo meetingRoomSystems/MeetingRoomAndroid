@@ -53,6 +53,7 @@ class UpcomingBookingAdapter extends BaseAdapter{
         upcoming_date.setText("Date: " + booking.bookingDate);
         upcoming_time.setText("Time: " + booking.bookingTime + "-" + booking.bookingTimeEnd);
         upcoming_room.setText("Room:" + " " + booking.room);
+
         if(booking.room == 1){
             upcoming_img.setImageResource(R.drawable.room1);
         }

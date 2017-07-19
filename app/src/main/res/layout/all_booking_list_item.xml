@@ -11,8 +11,9 @@
 
         <ImageView
             android:id="@+id/all_booking_img"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="5dp"
             android:contentDescription="@string/room_image" />
 
         <TextView
@@ -22,7 +23,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_toRightOf="@+id/all_booking_img"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#000000"
             tools:text="Name"/>
 
@@ -36,13 +37,13 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="2dp"
             android:ellipsize="end"
-            android:maxLines="3"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:maxLines="2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#000000"
             tools:text="Time"/>
 
         <TextView
-            android:id="@+id/all_booking_capacity"
+            android:id="@+id/all_booking_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/all_booking_time"
@@ -51,23 +52,23 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="2dp"
             android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#000000"
+            tools:text="Room" />
+
+        <TextView
+            android:id="@+id/all_booking_capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/all_booking_img"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
             android:maxLines="3"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#000000"
             tools:text="Capacity" />
 
-        <TextView
-            android:id="@+id/all_booking_room"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/all_booking_capacity"
-            android:layout_toRightOf="@+id/all_booking_img"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#000000"
-            tools:text="Room" />
 </RelativeLayout>
