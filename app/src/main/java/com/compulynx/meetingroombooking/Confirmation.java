@@ -353,6 +353,16 @@ public class Confirmation extends AppCompatActivity implements MultiSpinner.Mult
 
         private HttpURLConnection urlConnection;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
+            users = new HashMap<String, String>();
+            items = new ArrayList<>();
+            multiSpinner.setEnabled(false);
+            multiSpinner.setItems(items,"retrieving usernames",this);
+        }
+
         protected String doInBackground(Void... params) {
             StringBuilder result = new StringBuilder();
             if(isNetworkAvailable()) {
@@ -407,9 +417,6 @@ public class Confirmation extends AppCompatActivity implements MultiSpinner.Mult
                 e.printStackTrace();
             }
             if (success == 1) {
-                multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
-                users = new HashMap<String, String>();
-                items = new ArrayList<>();
                 for(int i = 0; i < names.length(); i++) {
                     String fname;
                     String uname;
@@ -424,12 +431,12 @@ public class Confirmation extends AppCompatActivity implements MultiSpinner.Mult
                     users.put(fname,uname);
                 }
                 multiSpinner.setItems(items, "No one selected", this);
+                multiSpinner.setEnabled(true);
             } else {
-                multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
                 ArrayList<String> noItems = new ArrayList<>();
                 noItems.add("No users");
                 multiSpinner.setItems(noItems, "No one selected", this);
-
+                multiSpinner.setEnabled(true);
             }
         }
 
